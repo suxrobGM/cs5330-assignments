@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "face-recognition"
+version = "0.1.0"
+description = ""
+authors = ["Sukhrob Ilyosbekov <SuxrobGM@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+deepface = "^0.0.93"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

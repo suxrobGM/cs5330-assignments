@@ -7,6 +7,10 @@
 		{
 			"name": "Labs",
 			"path": "./labs"
+		},
+		{
+			"name": "Face Recognition",
+			"path": "./face_recognition"
 		}
 	],
 	"settings": {}
