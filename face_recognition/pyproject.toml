@@ -7,9 +7,11 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.11,<3.12"
 deepface = "^0.0.93"
-
+tensorflow-io-gcs-filesystem = "^0.37"
+tensorflow = "^2.17"
+tf-keras = "^2.17"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,3 +1,3 @@
-import lab2
+import al6
 
-lab2.main()
+al6.main()
