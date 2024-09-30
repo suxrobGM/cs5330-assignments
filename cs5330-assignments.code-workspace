@@ -5,8 +5,8 @@
 			"path": "."
 		},
 		{
-			"name": "Labs",
-			"path": "./labs"
+			"name": "Assignments",
+			"path": "./assignments"
 		},
 		{
 			"name": "Face Recognition",
