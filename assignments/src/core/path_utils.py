@@ -14,5 +14,5 @@ def get_image_path(image_file: str) -> str:
 
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image not found: {image_file}")
-
+    
     return image_path

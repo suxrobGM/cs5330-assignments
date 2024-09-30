@@ -71,6 +71,7 @@ def add_salt_pepper_noise(image: np.ndarray, noise_level: float) -> np.ndarray:
     Returns:
         np.ndarray: The image with salt and pepper noise.
     """
+
     noisy_image = np.copy(image)
     num_salt = int(noise_level * image.size // 2) # Number of salt noise pixels
     num_pepper = int(noise_level * image.size // 2)
@@ -95,6 +96,7 @@ def apply_neighborhood_filter(image: np.ndarray, filter_size: int) -> np.ndarray
     Returns:
         np.ndarray: The filtered image.
     """
+    
     # Pad the image with zeros
     padded_image = np.pad(image, pad_width=filter_size, mode="constant", constant_values=0)
 

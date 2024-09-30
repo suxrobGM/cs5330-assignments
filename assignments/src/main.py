@@ -1,3 +1,4 @@
-import lab3
+from hw1 import image_coloring, histogram_equalisation
 
-lab3.main()
+#histogram_equalisation()
+image_coloring()
