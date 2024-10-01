@@ -22,14 +22,14 @@ def main() -> None:
     noisy_50 = add_salt_pepper_noise(image, 0.50)
 
     # Apply a 3x3 neighborhood filter to the noisy images
-    filtered_1_3x3 = apply_neighborhood_filter(noisy_1, 3)
-    filtered_10_3x3 = apply_neighborhood_filter(noisy_10, 3)
-    filtered_50_3x3 = apply_neighborhood_filter(noisy_50, 3)
+    filtered_1_3x3 = apply_neighborhood_filter_optimized(noisy_1, 3)
+    filtered_10_3x3 = apply_neighborhood_filter_optimized(noisy_10, 3)
+    filtered_50_3x3 = apply_neighborhood_filter_optimized(noisy_50, 3)
 
     # Apply a 5x5 neighborhood filter to the noisy images
-    filtered_1_5x5 = apply_neighborhood_filter(noisy_1, 5)
-    filtered_10_5x5 = apply_neighborhood_filter(noisy_10, 5)
-    filtered_50_5x5 = apply_neighborhood_filter(noisy_50, 5)
+    filtered_1_5x5 = apply_neighborhood_filter_optimized(noisy_1, 5)
+    filtered_10_5x5 = apply_neighborhood_filter_optimized(noisy_10, 5)
+    filtered_50_5x5 = apply_neighborhood_filter_optimized(noisy_50, 5)
 
     # Display the images im a 3x3 grid
     _, axes = plt.subplots(3, 3, figsize=(10, 10))
@@ -83,7 +83,6 @@ def add_salt_pepper_noise(image: np.ndarray, noise_level: float) -> np.ndarray:
     # Add pepper noise (black)
     coords_pepper = [np.random.randint(0, i - 1, num_pepper) for i in image.shape]
     noisy_image[coords_pepper[0], coords_pepper[1]] = 0
-    
     return noisy_image
 
 
@@ -110,3 +109,31 @@ def apply_neighborhood_filter(image: np.ndarray, filter_size: int) -> np.ndarray
             filtered_image[i, j] = np.mean(neighborhood)
     
     return filtered_image
+
+def apply_neighborhood_filter_optimized(image: np.ndarray, filter_size: int) -> np.ndarray:
+    """
+    Optimized version of the apply_neighborhood_filter function.
+    It uses numpy vectorized operations to apply the filter.
+    Args:
+        image (np.ndarray): The input image.
+        filter_size (int): The filter size.
+    Returns:
+        np.ndarray: The filtered image.
+    """
+    
+    # Pad the image with zeros
+    padded_image = np.pad(image, pad_width=filter_size, mode="constant", constant_values=0)
+
+    # Shape of the sliding windows view, it will be 4D (2 spatial dimensions + 2 filter dimensions) array
+    shape = (image.shape[0], image.shape[1], filter_size, filter_size) 
+
+    # Strides of the sliding windows view, strides means how many bytes to jump to get to the next element
+    strides = padded_image.strides + padded_image.strides
+
+    # Create a sliding windows view of the padded image
+    sliding_windows = np.lib.stride_tricks.as_strided(padded_image, shape=shape, strides=strides)
+    
+    # Compute the mean over the neighborhood dimensions (axis 2 and 3)
+    filtered_image = np.mean(sliding_windows, axis=(2, 3))
+    return filtered_image
+

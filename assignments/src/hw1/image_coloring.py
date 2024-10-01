@@ -93,7 +93,7 @@ def get_brightness(image: np.ndarray, scale_to_one = False) -> np.ndarray:
     """
     # Ensure the image has at least 3 channels
     if image.ndim < 3 and image.shape[2] != 3:
-        raise ValueError("Input image must have 3 channels (RGB).")
+        raise ValueError("Input image must have 3 channels (RGB)")
 
     # Extract the color channels
     R = image[:, :, 0]
