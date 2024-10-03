@@ -13,26 +13,53 @@ def run() -> None:
     Then, display the original, equalized image, and OpenCV equalized images in a 1x3 grid.
     """
 
-    image_path = get_image_path("game_of_thrones.png") # Get the image path from the dataset/images directory
-    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) # Load the image in grayscale
-    equalized_image = equalize_histogram(image) # Equalize the histogram of the image using own implementation
-    equalized_image_cv2 = cv2.equalizeHist(image) # Equalize the histogram of the image using OpenCV
+    # Get images' paths
+    game_of_thrones_path = get_image_path("game_of_thrones.png")
+    dark_img_path = get_image_path("dark_image.jpg")
 
-    # Display orginal, equalized image, and OpenCV equalized images in a 1x3 grid
-    _, axes = plt.subplots(1, 3, figsize=(15, 5))
-    axes: tuple[Axes, Axes, Axes] # Type hint for axes
+    game_of_thrones_img = cv2.imread(game_of_thrones_path, cv2.IMREAD_GRAYSCALE) # Load an image taht downloaded form internet
+    dark_img = cv2.imread(dark_img_path, cv2.IMREAD_GRAYSCALE) # Load an image that was taken from Canvas
+
+    # Equalize the histogram of images using own implementation
+    dark_img_equalized_img = equalize_histogram(dark_img)
+    game_of_thrones_equalized_img = equalize_histogram(game_of_thrones_img) # Equalize the histogram of the image using own implementation
+    
+    # Equalize the histogram of images using OpenCV
+    dark_img_equalized_img_cv2 = cv2.equalizeHist(dark_img) 
+    game_of_thrones_equalized_img_cv2 = cv2.equalizeHist(game_of_thrones_img) # Equalize the histogram of the image using OpenCV
+
+    # Display orginal, equalized image, and OpenCV equalized images in a 2x3 grid
+    _, axes = plt.subplots(2, 3, figsize=(15, 10))
+    axes: list[list[Axes]] # Type hint for axes
     canvas_manager = plt.get_current_fig_manager() # Get the canvas manager
 
     # Set the window title of the canvas manager
     if canvas_manager:
-        canvas_manager.set_window_title("Histogram Equalization - Game of Thrones Image")
+        canvas_manager.set_window_title("Histogram Equalization")
 
-    axes[0].set_title("Original grayscaled image")
-    axes[0].imshow(image, cmap="gray")
-    axes[1].set_title("Histogram equalization using own implementation")
-    axes[1].imshow(equalized_image, cmap="gray")
-    axes[2].set_title("Histogram equalization using OpenCV")
-    axes[2].imshow(equalized_image_cv2, cmap="gray")
+    axes[0][0].set_title("Dark grayscaled image")
+    axes[0][0].imshow(dark_img, cmap="gray")
+    axes[0][0].axis("off")
+
+    axes[0][1].set_title("Dark image histogram equalization (custom function)")
+    axes[0][1].imshow(dark_img_equalized_img, cmap="gray")
+    axes[0][1].axis("off")
+
+    axes[0][2].set_title("Dark image histogram equalization (OpenCV)")
+    axes[0][2].imshow(dark_img_equalized_img_cv2, cmap="gray")
+    axes[0][2].axis("off")
+
+    axes[1][0].set_title("Game of Thrones grayscaled image")
+    axes[1][0].imshow(game_of_thrones_img, cmap="gray")
+    axes[1][0].axis("off")
+
+    axes[1][1].set_title("Game of Thrones histogram equalization (custom function)")
+    axes[1][1].imshow(game_of_thrones_equalized_img, cmap="gray")
+    axes[1][1].axis("off")
+
+    axes[1][2].set_title("Game of Thrones histogram equalization (OpenCV)")
+    axes[1][2].imshow(game_of_thrones_equalized_img_cv2, cmap="gray")
+    axes[1][2].axis("off")
 
     plt.tight_layout()
     plt.show()

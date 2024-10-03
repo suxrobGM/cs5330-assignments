@@ -22,7 +22,7 @@ def run() -> None:
 
     # Display images in a 2x2 grid
     _, axes = plt.subplots(2, 2, figsize=(10, 10))
-    axes: tuple[tuple[Axes, Axes], tuple[Axes, Axes]] # Type hint for axes
+    axes: list[list[Axes]] # Type hint for axes
     canvas_manager = plt.get_current_fig_manager() # Get the canvas manager
 
     # Set the window title of the canvas manager
