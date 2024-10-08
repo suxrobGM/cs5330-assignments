@@ -2,6 +2,7 @@ from tkinter import Button, Frame, Tk, filedialog, Label
 from PIL import Image, ImageTk, ImageDraw
 from deepface import DeepFace
 from threading import Thread
+from core.utils import format_deepface_results
 
 class ImageTab(Frame):
     upload_button: Button
@@ -47,7 +48,7 @@ class ImageTab(Frame):
         try:
             results = DeepFace.analyze(file_path, actions=["age", "gender", "race", "emotion"], enforce_detection=False)
 
-            formatted_results = self.format_deepface_results(results)
+            formatted_results = format_deepface_results(results)
             self.result_label.config(text=formatted_results)
 
             self.draw_rectangles_on_faces(file_path, results)
@@ -73,31 +74,6 @@ class ImageTab(Frame):
                 draw.rectangle([(x, y), (x + w, y + h)], outline="red", width=3)
 
         self.set_image_label(self.result_img_label, image, resize=(400, 400))
-
-    def format_deepface_results(self, results: list[dict]) -> str:
-        """
-        Formats the results of DeepFace analysis for multiple faces into a multiline string.
-        Args:
-            results (list): The result from DeepFace analysis containing an array of dicts.
-        Returns:
-            str: A formatted multiline string displaying the analysis for all faces.
-        """
-        formatted_result = "DeepFace Analysis Results:\n-----------------------------\n"
-        
-        for idx, result in enumerate(results):
-            emotion: str = result.get("dominant_emotion", "N/A")
-            age: str = result.get("age", "N/A")
-            gender: str = result.get("dominant_gender", "N/A")
-            race: str = result.get("dominant_race", "N/A")
-            
-            formatted_result += f"Face {idx + 1}:\n"
-            formatted_result += f"  Emotion: {emotion.capitalize()}\n"
-            formatted_result += f"  Age: {age}\n"
-            formatted_result += f"  Gender: {gender}\n"
-            formatted_result += f"  Race: {race.capitalize()}\n"
-            formatted_result += "-----------------------------\n"
-        
-        return formatted_result
     
     def scale_image(self, image: Image.Image, max_width: int, max_height: int) -> Image.Image:
         """
