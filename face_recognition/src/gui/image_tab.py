@@ -99,7 +99,7 @@ class ImageTab(Frame):
         
         return formatted_result
     
-    def resize_image_to_fit(self, image: Image.Image, max_width: int, max_height: int) -> Image.Image:
+    def scale_image(self, image: Image.Image, max_width: int, max_height: int) -> Image.Image:
         """
         Resize an image to fit within the specified maximum width and height.
         Args:
@@ -135,7 +135,7 @@ class ImageTab(Frame):
         resized_image = image
 
         if resize:
-            resized_image = self.resize_image_to_fit(image, max_width=resize[0], max_height=resize[1])
+            resized_image = self.scale_image(image, max_width=resize[0], max_height=resize[1])
         
         photo_image = ImageTk.PhotoImage(resized_image)
         label.configure(image=photo_image) # type: ignore
