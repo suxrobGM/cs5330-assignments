@@ -41,11 +41,15 @@ def main() -> None:
 
     # Apply a color map to simulate the green hue of night vision devices
     # COLORMAP_BONE, COLORMAP_OCEAN, COLORMAP_SUMMER can give greenish tones
-    colored = cv2.applyColorMap(blended, cv2.COLORMAP_OCEAN)
+    # colored = cv2.applyColorMap(blended, cv2.COLORMAP_OCEAN)
+
+    # Create a green-tinted image by mapping the intensity to the green channel
+    zeros = np.zeros_like(blended)
+    green_tinted = cv2.merge([zeros, blended, zeros])
 
     # Adjust brightness and contrast
     # Alpha controls contrast (1.0-3.0), beta controls brightness (0-100)
-    adjusted = cv2.convertScaleAbs(colored, alpha=1.5, beta=10)
+    adjusted = cv2.convertScaleAbs(green_tinted, alpha=1.5, beta=10)
 
     display_images(img, edges_canny, adjusted)
 
