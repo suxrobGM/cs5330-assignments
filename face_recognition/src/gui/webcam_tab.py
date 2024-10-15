@@ -15,6 +15,8 @@ class WebcamTab(tk.Frame):
     capture: cv2.VideoCapture | None
     available_cameras: list[int]
     current_image: ImageTk.PhotoImage
+    frame_skip_count: int = 0
+    process_every_nth_frame: int = 1  # Only detect faces every 5th frame
 
     def __init__(self, parent: tk.Tk) -> None:
         tk.Frame.__init__(self, parent)
@@ -96,25 +98,45 @@ class WebcamTab(tk.Frame):
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             # Analyze the frame in a separate thread
-            Thread(target=self.recognize_face_from_frame, args=(rgb_frame, frame)).start()
+            # Skip frames for face detection to reduce lag
+            #self.frame_skip_count += 1
+            #if self.frame_skip_count % self.process_every_nth_frame == 0:
+                # Run face detection on a resized copy for faster processing
+                # small_frame = cv2.resize(rgb_frame, (320, 240))
+                #Thread(target=self.recognize_face_from_frame, args=(rgb_frame, frame)).start()
+
+            self.recognize_face_from_frame(rgb_frame, frame)
 
             # Display the frame in the GUI
-            image = ImageTk.PhotoImage(Image.fromarray(rgb_frame))
-            self.video_label.configure(image=image)
-            self.video_label.image = image
+            self.display_frame(rgb_frame)
 
     def recognize_face_from_frame(self, rgb_frame: np.ndarray, original_frame: np.ndarray) -> None:
         try:
             # Perform face recognition using DeepFace
             results = DeepFace.extract_faces(original_frame, enforce_detection=False)
+            face_boxes = []
 
             for result in results:
                 # Draw rectangles on the original frame
                 face_box = result.get("facial_area")
-                print("result", result)
+
                 if face_box:
                     x, y, w, h = face_box["x"], face_box["y"], face_box["w"], face_box["h"]
-                    cv2.rectangle(original_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    # scale_x = original_frame.shape[1] / rgb_frame.shape[1]
+                    # scale_y = original_frame.shape[0] / rgb_frame.shape[0]
+
+                    # x, y, w, h = (
+                    #     int(face_box["x"] * scale_x),
+                    #     int(face_box["y"] * scale_y),
+                    #     int(face_box["w"] * scale_x),
+                    #     int(face_box["h"] * scale_y),
+                    # )
+
+                    face_boxes.append((x, y, w, h))
+
+                    # Schedule rectangle drawing in the main thread using after()
+                    # self.parent.after(0, self.draw_rectangles, rgb_frame, face_boxes)
+                    self.draw_rectangles(rgb_frame, face_boxes)
 
             # Format and display the results
             #formatted_results = format_deepface_results(results)
@@ -123,6 +145,29 @@ class WebcamTab(tk.Frame):
         except Exception as e:
             self.result_label.config(text=f"Error: {str(e)}")
 
+    def draw_rectangles(self, frame: np.ndarray, face_boxes: list[tuple[int, int, int, int]]) -> None:
+        """
+        Draws rectangles on the frame for all detected faces and updates the GUI.
+        Args:
+            frame (np.ndarray): The RGB frame to draw rectangles on.
+            face_boxes (list[tuple[int, int, int, int]]): A list of face bounding boxes.
+        """
+        for (x, y, w, h) in face_boxes:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # Update the GUI with the modified frame
+        self.display_frame(frame)
+
+    def display_frame(self, frame: np.ndarray) -> None:
+        """
+        Displays the frame in the GUI.
+        Args:
+            frame (np.ndarray): The RGB frame to display.
+        """
+        image = ImageTk.PhotoImage(Image.fromarray(frame))
+        self.video_label.configure(image=image) # type: ignore
+        self.video_label.image = image # type: ignore
+
     def stop_camera(self) -> None:
         """
         Stops the webcam feed.
@@ -130,5 +175,5 @@ class WebcamTab(tk.Frame):
         if self.capture is not None:
             self.capture.release()
             self.capture = None
-            self.video_label.config(image=None)
+            self.video_label.config(image=None) # type: ignore
             self.result_label.config(text="")
