@@ -29,11 +29,11 @@ def main() -> None:
     enhanced = clahe.apply(blurred)
  
     # Apply edge detection using the Canny algorithm
-    edges = cv2.Canny(blurred, 50, 150)
+    edges_canny = cv2.Canny(blurred, 50, 150)
 
     # Invert the edges image
     # So that edges are white on a black background
-    edges = cv2.bitwise_not(edges)
+    edges = cv2.bitwise_not(edges_canny)
 
     # Blend the enhanced image and the inverted edges to highlight important features
     # This ensures that edges (important elements) are bright in the final image
@@ -47,7 +47,7 @@ def main() -> None:
     # Alpha controls contrast (1.0-3.0), beta controls brightness (0-100)
     adjusted = cv2.convertScaleAbs(colored, alpha=1.5, beta=10)
 
-    display_images(img, edges, adjusted)
+    display_images(img, edges_canny, adjusted)
 
 
 def display_images(org_img: np.ndarray, edges: np.ndarray, night: np.ndarray) -> None:
