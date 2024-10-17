@@ -1,5 +1,3 @@
-import lab5
-from hw2 import visualizing_bluring
+from hw2 import edges_detection
 
-#lab5.main()
-visualizing_bluring()
+edges_detection()

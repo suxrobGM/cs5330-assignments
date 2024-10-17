@@ -29,6 +29,9 @@ def run() -> None:
 
     display_images(X, Y, img, blur_5x5, blur_11x11)
 
+    # Answer to the question:
+    # As the filter size increases, the 3D graphs become smoother, and the sharp variations in pixel intensity are reduced. 
+    # The image surface appears more flattened, indicating a loss of fine details due to increased blurring.
 
 def display_images(
     x: np.ndarray,
