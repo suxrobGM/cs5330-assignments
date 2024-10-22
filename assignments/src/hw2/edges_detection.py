@@ -35,7 +35,7 @@ def run() -> None:
     canny_blur = cv2.Canny(blurred, 100, 100)
 
     titles = ["Original", "Sobel cut_off 50", "Sobel cut_off 150", "Canny",
-              "Blurred", "", "", ""]
+              "Blurred", "Blurred Sobel 50", "Blurred Sobel 150", "Canny Blurred"]
 
     images = [img, sobel_50, sobel_150, canny_edges,
               blurred, sobel_50_blur, sobel_150_blur, canny_blur]

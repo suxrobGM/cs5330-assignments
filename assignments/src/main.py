@@ -1,3 +1,3 @@
-from hw2 import edges_detection
+import lab6
 
-edges_detection()
+lab6.main1()
