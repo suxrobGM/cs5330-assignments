@@ -1,3 +1,3 @@
-import lab6
+import lab7
 
-lab6.main()
+lab7.main()
