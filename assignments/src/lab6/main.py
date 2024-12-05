@@ -10,7 +10,7 @@ def main():
     Detect contours of colored blocks in an image using HSV color space.
     """
     # Load the image
-    image_path = get_image_path("blocks.jpg")
+    image_path = get_image_path("cookies.jpg")
     image = cv2.imread(image_path)
 
     # Convert the image to HSV color space for better color detection

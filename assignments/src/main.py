@@ -1,3 +1,3 @@
-import hw3
+import lab6
 
-hw3.main()
+lab6.main()

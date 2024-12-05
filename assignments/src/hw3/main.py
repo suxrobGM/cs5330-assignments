@@ -10,7 +10,7 @@ def main():
     Detect faces and eyes in real-time using Haar cascades.
     Apply an effect to invert the colors of the detected eyes.
     """
-    cap = init_video_capture(1)
+    cap = init_video_capture(0)
 
     # Get the first frame
     previous_gray = get_first_frame(cap)

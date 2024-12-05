@@ -14,9 +14,6 @@ class WebcamTab(tk.Frame):
     result_label: Label
     capture: cv2.VideoCapture | None
     available_cameras: list[int]
-    current_image: ImageTk.PhotoImage
-    frame_skip_count: int = 0
-    process_every_nth_frame: int = 1  # Only detect faces every 5th frame
 
     def __init__(self, parent: tk.Tk) -> None:
         tk.Frame.__init__(self, parent)
@@ -97,14 +94,6 @@ class WebcamTab(tk.Frame):
             # Convert the frame to RGB
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            # Analyze the frame in a separate thread
-            # Skip frames for face detection to reduce lag
-            #self.frame_skip_count += 1
-            #if self.frame_skip_count % self.process_every_nth_frame == 0:
-                # Run face detection on a resized copy for faster processing
-                # small_frame = cv2.resize(rgb_frame, (320, 240))
-                #Thread(target=self.recognize_face_from_frame, args=(rgb_frame, frame)).start()
-
             self.recognize_face_from_frame(rgb_frame, frame)
 
             # Display the frame in the GUI
@@ -122,15 +111,6 @@ class WebcamTab(tk.Frame):
 
                 if face_box:
                     x, y, w, h = face_box["x"], face_box["y"], face_box["w"], face_box["h"]
-                    # scale_x = original_frame.shape[1] / rgb_frame.shape[1]
-                    # scale_y = original_frame.shape[0] / rgb_frame.shape[0]
-
-                    # x, y, w, h = (
-                    #     int(face_box["x"] * scale_x),
-                    #     int(face_box["y"] * scale_y),
-                    #     int(face_box["w"] * scale_x),
-                    #     int(face_box["h"] * scale_y),
-                    # )
 
                     face_boxes.append((x, y, w, h))
 
